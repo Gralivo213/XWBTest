@@ -186,7 +186,7 @@
                 }
             });
 
-            if (this.player?.lx || this.player?.tilePath) {
+            if (this.player) {
                 let gx, gy, cid;
                 if (this.player.tilePath && this.player.tilePath.includes('|')) {
                     let parts = this.player.tilePath.split('|').map(s => s.trim());
@@ -194,22 +194,26 @@
                     const [cid2, lx2, ly2] = parts[1].split(',').map(Number);
                     const cfg1 = this.chunkConfigs[cid1];
                     const cfg2 = this.chunkConfigs[cid2];
-                    const gx1 = (cfg1?.cx || 0) * 10 + lx1 - 1, gy1 = (cfg1?.cy || 0) * 10 + ly1 - 1;
-                    const gx2 = (cfg2?.cx || 0) * 10 + lx2 - 1, gy2 = (cfg2?.cy || 0) * 10 + ly2 - 1;
+                    
+                    // Explicit boundary correction padding mapping for full 10x10 support
+                    const gx1 = (cfg1?.cx || 0) * 10 + (lx1 - 1);
+                    const gy1 = (cfg1?.cy || 0) * 10 + (ly1 - 1);
+                    const gx2 = (cfg2?.cx || 0) * 10 + (lx2 - 1);
+                    const gy2 = (cfg2?.cy || 0) * 10 + (ly2 - 1);
                     
                     let progress = Math.min(1, (ts - (this.mapLoadTime || 0)) / 1000);
                     gx = global.lerp(gx1, gx2, progress);
                     gy = global.lerp(gy1, gy2, progress);
                     cid = progress < 0.5 ? cid1 : cid2;
-                } else {
+                } else if (this.player.chunkId) {
                     const cidVal = this.player.chunkId;
                     const cfg = this.chunkConfigs[cidVal];
-                    gx = (cfg?.cx || 0) * 10 + this.player.lx - 1;
-                    gy = (cfg?.cy || 0) * 10 + this.player.ly - 1;
+                    gx = (cfg?.cx || 0) * 10 + (this.player.lx - 1);
+                    gy = (cfg?.cy || 0) * 10 + (this.player.ly - 1);
                     cid = cidVal;
                 }
 
-                if (visibleChunks.has(cid) && isVis(gx, gy)) {
+                if (cid && isVis(gx, gy)) {
                     q.push({ type: 'player', gx, gy, chunkId: cid, z: gx + gy + 0.1 });
                 }
             }
