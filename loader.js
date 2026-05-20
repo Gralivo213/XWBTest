@@ -1,5 +1,5 @@
 (function () {
-    var BASE = 'https://cdn.jsdelivr.net/gh/Gralivo213/XWBTest@master/';
+    var BASE = 'https://cdn.jsdelivr.net/gh/Gralivo213/XWBTest@main/';
 
     function loadCSS(href) {
         var link = document.createElement('link');

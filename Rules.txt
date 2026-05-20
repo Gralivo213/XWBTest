@@ -1022,7 +1022,7 @@ Example Out put :-----------
 
     </script>
 
-    <script src="https://cdn.jsdelivr.net/gh/Gralivo213/XWBTest@master/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Gralivo213/XWBTest@main/loader.js"></script>
 
 </body>
 
