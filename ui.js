@@ -82,7 +82,12 @@
     </div>
 </div>
 
-${[['sense', 'visibility', 25, 95, 'Sense Aura'], ['region', 'map', 95, 25, 'Toggle Regions'], ['mission', 'assignment', 25, 25, 'Missions']].map(([id, i, b, l, t]) => `<div class="iso-float-btn" id="iso-${id}-btn" style="bottom:${b}px;left:${l}px" title="${t}"><span class="material-symbols-outlined">${i}</span></div>`).join('')}
+<div class="iso-action-bar">
+    <div class="iso-float-btn" id="iso-sense-btn" title="Sense Aura"><span class="material-symbols-outlined">visibility</span></div>
+    <div class="iso-float-btn" id="iso-region-btn" title="Toggle Regions"><span class="material-symbols-outlined">map</span></div>
+    <div class="iso-float-btn" id="iso-mission-btn" title="Missions"><span class="material-symbols-outlined">assignment</span></div>
+    <div class="iso-float-btn chunk-gen-btn" id="iso-chunk-btn" style="display:none" title="Generate New Chunk"><span class="material-symbols-outlined">add_location_alt</span></div>
+</div>
 
 <div class="iso-mission-panel" id="iso-mission-panel">
     <div class="iso-stat-close" id="mission-close">✕</div>
@@ -175,7 +180,7 @@ ${[['sense', 'visibility', 25, 95, 'Sense Aura'], ['region', 'map', 95, 25, 'Tog
     </div>
 </div>
 
-<div class="iso-float-btn chunk-gen-btn" id="iso-chunk-btn" style="bottom:165px;left:25px;display:none" title="Generate New Chunk"><span class="material-symbols-outlined">add_location_alt</span></div>
+
 <div class="iso-ui-popup" id="chunk-gen-popup" style="bottom:20px;right:20px;left:auto;flex-direction:column;align-items:flex-start;width:350px;border-color:var(--gold-primary);z-index:9000;">
     <span id="chunk-popup-text" style="width:100%;line-height:1.4;color:#10b981;"></span>
     <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;margin-top:10px;"><button class="iso-float-btn" id="chunk-copy-btn" style="position:relative;width:40px;height:40px;bottom:0;left:0" title="Copy"><span class="material-symbols-outlined" style="font-size:18px">content_copy</span></button></div>
@@ -393,8 +398,14 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
             }, { passive: false });
             this.canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-            // Apply scale mode on page load (defaults to 'small')
-            const savedScale = localStorage.getItem('iso_ui_scale') || 'small';
+            // Apply scale mode on page load (defaults to 'mobile' with migration)
+            let savedScale = localStorage.getItem('iso_ui_scale');
+            const migrationKey = 'iso_ui_scale_migrated_v2';
+            if (!localStorage.getItem(migrationKey) || !savedScale) {
+                savedScale = 'mobile';
+                localStorage.setItem('iso_ui_scale', 'mobile');
+                localStorage.setItem(migrationKey, 'true');
+            }
             document.body.classList.add(`ui-${savedScale}`);
 
             // Settings menu toggling and scaling logic

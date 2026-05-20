@@ -2156,4 +2156,76 @@ body.ui-mobile .iso-float-btn:not(#iso-settings-btn) {
 }
 body.ui-mobile .iso-float-btn:not(#iso-settings-btn):hover {
     transform: scale(0.85) !important;
+}
+
+/* ========================================== */
+/* DYNAMIC FLOATING ACTION BAR                */
+/* ========================================== */
+.iso-action-bar {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 20px;
+    background: rgba(13, 13, 15, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201, 168, 106, 0.25);
+    border-radius: 30px;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 15px rgba(201, 168, 106, 0.05);
+    z-index: 2500;
+    pointer-events: auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iso-action-bar .iso-float-btn {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 0 !important;
+    transform: none !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+.iso-action-bar .iso-float-btn:hover {
+    transform: translateY(-4px) scale(1.05) !important;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5), inset 0 0 10px var(--gold-glow) !important;
+}
+
+.iso-action-bar .iso-float-btn .material-symbols-outlined {
+    font-size: 24px;
+}
+
+/* Hide background and border of action bar when main UI is hidden */
+.hide-main-ui .iso-action-bar {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    pointer-events: none !important;
+}
+
+/* Scaling Adaptive Overrides for Action Bar */
+body.ui-normal .iso-action-bar {
+    transform: translateX(-50%) scale(1) !important;
+    bottom: 25px !important;
+}
+
+body.ui-small .iso-action-bar {
+    transform: translateX(-50%) scale(0.85) !important;
+    bottom: 18px !important;
+}
+
+body.ui-mobile .iso-action-bar {
+    transform: translateX(-50%) scale(0.7) !important;
+    bottom: 12px !important;
 }
