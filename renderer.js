@@ -92,7 +92,7 @@
 
             const visibleChunks = new Set();
             Object.entries(this.chunkConfigs).forEach(([id, cfg]) => {
-                if (cfg.hidden) return;
+                if (cfg.hidden || this.chunkConfigs[id]?.hidden) return;
                 const cx = cfg.cx * 10, cy = cfg.cy * 10;
                 const c1 = this.gridToScreen(cx, cy), c2 = this.gridToScreen(cx + 9, cy);
                 const c3 = this.gridToScreen(cx, cy + 9), c4 = this.gridToScreen(cx + 9, cy + 9);
@@ -108,6 +108,7 @@
             let bestZ = -Infinity;
 
             visibleChunks.forEach(cid => {
+                if (this.chunkConfigs[cid]?.hidden) return;
                 for (let lx = 1; lx <= 10; lx++) {
                     for (let ly = 1; ly <= 10; ly++) {
                         const t = this.chunks[`${cid},${lx},${ly}`];
@@ -128,6 +129,7 @@
             });
 
             visibleChunks.forEach(cid => {
+                if (this.chunkConfigs[cid]?.hidden) return;
                 const img = this.chunkImages[cid];
                 if (img) {
                     const cfg = this.chunkConfigs[cid];
@@ -535,6 +537,7 @@
                 if (!reg.ranges?.length) return;
                 let [tGX, tGY, cnt] = [0, 0, 0];
                 reg.ranges.forEach(r => {
+                    if (this.chunkConfigs[r.cid]?.hidden) return;
                     const cfg = this.chunkConfigs[r.cid];
                     if (cfg) { tGX += cfg.cx * 10 + (r.lx1 + r.lx2) / 2 - 1; tGY += cfg.cy * 10 + (r.ly1 + r.ly2) / 2 - 1; cnt++; }
                 });

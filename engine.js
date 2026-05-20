@@ -275,7 +275,7 @@
                         const id = +idStr;
                         currentMax = Math.max(currentMax, id);
                         this.generateChunk(id, cfg.cx, cfg.cy);
-                        this.chunkConfigs[id] = { ...this.chunkConfigs[id], cx: cfg.cx, cy: cfg.cy, type: cfg.type, hidden: cfg.hidden || false };
+                        this.chunkConfigs[id] = { ...this.chunkConfigs[id], cx: cfg.cx, cy: cfg.cy, type: cfg.type, hidden: cfg.hidden || data.chunks[idStr].hidden || false };
                         if (['G1', 'G2', 'G3', 'G4', 'DT1', 'DT2', 'DT3', 'DT4', 'F1', 'F2', 'F3', 'F4', 'S1', 'S2', 'S3', 'S4', 'MT1', 'MT2', 'MT3', 'MT4', 'CityT1', 'ForestT1', 'ForestT2'].includes(cfg.type)) {
                             const prefix = getChunkPrefix(cfg.type);
                             global.AssetManager.load(`${global.CONFIG.IMG_BASE}${prefix}${cfg.type.charAt(cfg.type.length - 1)}.png`);
