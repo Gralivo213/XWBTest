@@ -1,0 +1,51 @@
+Heaven-Sundering True Dragon
+Blackstone Blood Bear
+Earthsplit Tuskwild Boar
+Thunderhoof Heavenly Bull
+Jade River Ascension Carp
+Moonshadow Spirit Cat
+Swampfang Abyss Beast
+Deathcry Black Raven
+Jade Antler Spirit Deer
+Mountainback War Mammoth
+Azure Floodwyrm
+Mistveil Spirit Fox
+Cliffhorn Spirit Ram
+Windstep Moon Hare
+Cloudstride Heavenly Steed
+Gravefang Laughing Beast
+Shadowstripe Swiftclaw
+Crimsonmane Spirit King
+Stonehide Flamecrawler
+Frostclaw Silent Hunter
+Heaven-Leaping Spirit Sage
+Nine-Heavens Celestial Sovereign
+Earthshaker Ironhide
+Thousand-Scale Earth Tyrant
+Nightveil Phantom Stalker
+Ironspike Mountain Terror
+Primordial Chaos Heaven Qilin
+Blacktooth Tunnel Fiend
+Ironhorn Mountain Crusher
+Voidfang Ancient Horror
+Shadowveil Three-Tail Illusionist
+Cloudwool Spirit Grazer
+Greenfang Venomfiend
+Spiritnut Thunder Runner
+Moonantler Sacred Monarch
+Three-Tail Illusion Sovereign
+Frostfire Heaven King
+Blackwater Spirit Guardian
+Vermilion Heaven Phoenix
+Corpsefeast Bone Reaper
+
+
+
+
+
+
+Generate image of this beast for my isometric Xianxia style game in Transparent background. I want his full body to be visible in screen with front view. Isometric style preffered. transpraent background|
+
+Create total of 5 stages of this beast. Stage 1 is evolution 1, which is basic. and stage 5 is its boss form
+
+So basically you will be creating total of 5 sprites side by side. MAke sure there is alot of distance between each sprite and theyre not near each other and each evolution stage adds something new and changes something

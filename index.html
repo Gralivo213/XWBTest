@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IsoMapEngine - 4 Chunk World</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="config.js"></script>
+    <script src="asset_manager.js"></script>
+    <script src="engine.js"></script>
+    <script src="renderer.js"></script>
+    <script src="ui.js"></script>
+    <script src="18.js"></script>
+    <script>
+        window.Game = "Start";
+
+        // STRICTLY STATIC JSON WORLD DATA - NO GENERATION CODE
+        const worldData = {
+            "access": { "chunkGen": true },
+            "player": { "chunkId": 1, "lx": 5, "ly": 5, "direction": "N", "name": "Wandering Cultivator" }, // Global direction tracker
+            "time": { "cycle": "Day", "day": "01", "month": "01", "year": "1" },
+            "dantianProgress": 0,
+            "realm": "Mortal",
+            "lifespan": 100,
+            "stats": {
+                "health": 100, "maxHealth": 100, "will": 100, "maxWill": 100, "qi": 100, "maxQi": 100, "mood": 100, "maxMood": 100, "sanity": 100, "maxSanity": 100,
+                "spiritRoot": "Azure Thunder Root",
+                "Vitality": 45, "Str": 25, "Def": 20, "Agi": 35, "Mind": 50, "Luck": 12, "Soul": 45, "Comprehension": 70, "Perception": 65, "Charm": 30, "QI control": 15, "Stealth": 10, "Dexterity": 20
+            },
+            "inventory": [
+                { "code": "#I1", "name": "Rusted Iron Sword", "description": "A blunt and rusted sword.", "symbol": "Sword" }
+            ],
+            "craftRecipes": [],
+            "skills": { "active": [], "passive": [] },
+            "missions": { "main": {}, "side": {} },
+            "relations": [
+                { "type": "family", "Name": "Lin Tianhao", "Gender": "M", "Relation": "Adoptive Father & Master", "Number": 1 },
+                { "type": "friends", "Name": "Shen Qingxian", "Gender": "F", "Relation": "Dharma Companion", "Number": 1 },
+                { "type": "friends", "Name": "Daoist Ye", "Gender": "M", "Relation": "Drinking Buddy", "Number": 2 },
+                { "type": "disciples", "Name": "Xiao Chen", "Gender": "M", "Relation": "First Disciple (Sword Cultivator)", "Number": 1 },
+                { "type": "enemy", "Name": "Elder Bloodfiend", "Gender": "M", "Relation": "Vengeful Nemesis", "Number": 1 },
+                { "type": "subordinates", "Name": "Gu Ruo", "Gender": "F", "Relation": "Shadow Guard Commander", "Number": 1 },
+                { "type": "lover", "Name": "Lady Yue'er", "Gender": "F", "Relation": "Twin Cultivation Partner", "Number": 1 }
+            ],
+            "chunks": {
+                "1": { "cx": 1, "cy": 1, "type": "G1" },
+                "{{<H>2": { "cx": 2, "cy": 1, "type": "DT1" },
+                "3</H>}}": { "cx": 1, "cy": 2, "type": "F1" },
+                "4": { "cx": 2, "cy": 2, "type": "S1" },
+                "21": { "cx": 0, "cy": 1, "type": "ForestT1" },
+                
+                // 4x4 square block city chunk array
+                "5": { "cx": 3, "cy": 3, "type": "CityT1" }, "6": { "cx": 4, "cy": 3, "type": "CityT1" }, "7": { "cx": 5, "cy": 3, "type": "CityT1" }, "8": { "cx": 6, "cy": 3, "type": "CityT1" },
+                "9": { "cx": 3, "cy": 4, "type": "CityT1" }, "10": { "cx": 4, "cy": 4, "type": "CityT1" }, "11": { "cx": 5, "cy": 4, "type": "CityT1" }, "12": { "cx": 6, "cy": 4, "type": "CityT1" },
+                "13": { "cx": 3, "cy": 5, "type": "CityT1" }, "14": { "cx": 4, "cy": 5, "type": "CityT1" }, "15": { "cx": 5, "cy": 5, "type": "CityT1" }, "16": { "cx": 6, "cy": 5, "type": "CityT1" },
+                "17": { "cx": 3, "cy": 6, "type": "CityT1" }, "18": { "cx": 4, "cy": 6, "type": "CityT1" }, "19": { "cx": 5, "cy": 6, "type": "CityT1" }, "20": { "cx": 6, "cy": 6, "type": "CityT1" }
+            },
+            "regions": [
+                { "name": "Qingyun Fields", "type": "Forest", "impedance": 2, "ranges": [{"cid": 1, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 2, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 3, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 4, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}], "exceptions": [], "color": "#4ade80" },
+                { "name": "Azure Capital", "type": "City", "impedance": 5, "ranges": [{"cid": 5, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 6, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 7, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 8, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 9, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 10, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 11, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 12, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 13, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 14, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 15, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 16, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 17, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 18, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 19, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}, {"cid": 20, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}], "exceptions": [], "color": "#facc15" }
+            ],
+            "wallStructures": [
+                { "range": "5,9,9 - 20,2,2", "quality": "Polished Granite", "hp": "50000/50000" }
+            ],
+            "specificWalls": {},
+            "towerStructures": {},
+            "gateStructures": {
+                "7,1,9": { "state": "Closed", "condition": "Reinforced Brass Gate", "quality": "Spirit-Forged Steel", "hp": "25000/25000", "direction": "N" }
+            },
+            "entities": {
+                "herbData": {
+                    "21,3,4": { "age": 50, "name": "Spirit Ginseng", "element": "Wood", "rank": "Spirit", "lore": "A fifty-year-old Ginseng root growing deep within the emerald bamboo grove.", "growth": 80, "obtainable": "Spirit Ginseng", "color": "#99f6e4", "hidden": false },
+                    "21,4,7": { "age": 1, "name": "Morning Dao-Dew", "element": "Water", "rank": "Mortal", "lore": "Pure morning dew that gathered on a spiritual leaf.", "growth": 90, "obtainable": "Morning Dao-Dew", "color": "#3b82f6", "hidden": false }
+                }, "treeData": {}, 
+                "npcs": {
+                    "21,5,6": { "type": "B", "name": "Evolving Spirit Bear", "age": 3, "realm": "Qi Condensation (Layer 2)", "stage": 3, "personality": [{ "tag": "Aggressive", "color": "#ef4444", "influence": 8 }], "description": "A dark spirit bear showing signs of evolution. Its claws glow with blue essence.", "color": "#ff8888" },
+                    "21,3,6": { "type": "H", "name": "Evolving Spirit Hare", "age": 2, "realm": "Mortal", "stage": 1, "personality": [{ "tag": "Timid", "color": "#3b82f6", "influence": 5 }], "description": "A swift hare that lives in the spiritual forest. Highly evasive.", "color": "#ffffff" },
+                    "6,10,8": { "type": "IG", "name": "Imperial Guard | Zhao", "age": 45, "realm": "Qi Condensation (Layer 8)", "personality": [{ "tag": "Disciplined", "color": "#3b82f6", "influence": 9 }, { "tag": "Loyal", "color": "#10b981", "influence": 8 }], "description": "A stern guard watching the northern approach to the Azure Capital. His eyes are like hawks.", "color": "#fff" },
+                    "7,3,8": { "type": "IG", "name": "Imperial Guard | Feng", "age": 42, "realm": "Qi Condensation (Layer 7)", "personality": [{ "tag": "Vigilant", "color": "#facc15", "influence": 7 }], "description": "He grips his spear tightly, scanning the horizon for any signs of trouble.", "color": "#fff" },
+                    "6,10,10": { "type": "IG", "name": "Imperial Guard | Liu", "age": 38, "realm": "Qi Condensation (Layer 6)", "personality": [{ "tag": "Bored", "color": "#94a3b8", "influence": 4 }], "description": "An internal sentry who seems more interested in the city's street food than the gate.", "color": "#fff" },
+                    "7,3,10": { "type": "IG", "name": "Imperial Guard | Han", "age": 40, "realm": "Qi Condensation (Layer 7)", "personality": [{ "tag": "Vengeful", "color": "#ef4444", "influence": 6 }, { "tag": "Greedy", "color": "#eab308", "influence": 5 }], "description": "He looks at your spirit pouch with a suspicious intensity. Better watch your belongings.", "color": "#fff" }
+                }, 
+                "qiTileData": {}, "mineralData": {}, "guData": {}, "springData": {}, "soilData": {},
+                "forestData": {
+                    "1,2,1": {
+                        "name": "Emerald Bamboo Grove",
+                        "beasts": "Evolving Spirit Bear (B) : Qi Condensation (Layer 2), Hare (H) : Mortal",
+                        "herbs": "Ginseng : 50 Years (Wood), Morning Dao-Dew : 1 Year (Water)",
+                        "qi": 3
+                    },
+                    "1,4,3": {
+                        "name": "Mist-Covered Forest",
+                        "beasts": "Evolving Spirit Bear (B) : Qi Condensation (Layer 2), SwamFang (SF) : Qi Condensation",
+                        "herbs": "Ginseng : 50 Years (Wood), Fire Jade Fruit : 100 Years (Fire)",
+                        "qi": 5
+                    }
+                }
+            }
+        };
+
+        const sampleData = JSON.stringify(worldData);
+
+        let updated = false;
+        const updateInterval = setInterval(() => {
+            if (typeof window.UpdateMap === 'function') {
+                window.UpdateMap(sampleData);
+                console.log("4-Chunk Pure JSON World Loaded.");
+                updated = true;
+                clearInterval(updateInterval);
+            }
+        }, 200);
+
+        setTimeout(() => {
+            if (!updated && typeof window.UpdateMap === 'function') {
+                window.UpdateMap(sampleData);
+                clearInterval(updateInterval);
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>

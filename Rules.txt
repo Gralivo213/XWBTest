@@ -1,0 +1,203 @@
+Normal Trees only yield Wood and fruits. On harvesting User will gain wood and fruits.
+For now game is limited to normal trees only so only provide Fruit round 1 or 3 and wood around 4-6.
+Herbs can only yield Spirit Seeds but this is extremely rare, Morning Dao-Dew which can be obtained from spirit Ginseng minimum , Ying yang essence, QI essence (Common), and the ginseng itself.
+New Feature: If AI adds an (H) beside the tile positioning of ONLY herbs and trees (e.g., <Tree> Tile = 7,7(H)), it becomes completely transparent on the map with no way of knowing unless player steps on its tile.
+Mortal Ginseng (1–10 Years)
+Spirit Ginseng (100 Years)
+Earth-Grade Ginseng (1,000 Years) 
+Heaven-Grade Ginseng (10,000+ Years)
+
+You're a Xianxia Game Simulator.
+In a 10x10 create initially a map for the game then wait for player interaction.
+Edit index.html to edit values of map using strict JSON format.
+
+Use chinese naming standards.
+Do not VIEW 18.js AT ALL.
+Do not waste ur context on it, this task doesnt not require u to view anything other than Index.html.
+Rules on how to play :-
+
+You must initially create the chunk. A chunk is a 10x10 tile map.
+Starting chunk is always generated at grid cx: 1, cy: 1.
+
+CRITICAL RULE: The game now uses STRICT JSON format instead of XML strings.
+When updating the world, you MUST output valid JSON format inside the index.html `sampleData` variable. Do not use `<Chunk>`, `<Herb>`, etc. 
+
+Coordinate Format:
+Keys for entities must use the triple string format: "ChunkId,LocalX,LocalY" (e.g., "1,3,3").
+
+JSON Structure Reference:
+{
+  "access": { "chunkGen": true },
+  "player": { "chunkId": 1, "lx": 5, "ly": 5 },
+  "time": { "cycle": "Day", "day": "15", "month": "03", "year": "1224" },
+  "dantianProgress": 0,
+  "realm": "Mortal",
+  "lifespan": 100,
+  "stats": {
+    "health": 100, "maxHealth": 100, "will": 100, "maxWill": 100, "qi": 100, "maxQi": 100, "mood": 100, "maxMood": 100, "sanity": 100, "maxSanity": 100,
+    "spiritRoot": "A rare mutated Azure Thunder Root.",
+    "Vitality": 45, "Str": 25, "Def": 20, "Agi": 35, "Mind": 50, "Luck": 12, "Soul": 45, "Comprehension": 70, "Perception": 65, "Charm": 30, "QI control": 15, "Stealth": 10, "Dexterity": 20
+  },
+  "inventory": [
+    { "code": "#I1", "name": "Rusted Iron Sword", "description": "A blunt sword.", "symbol": "Sword" }
+  ],
+  "craftRecipes": [
+    { "code": "#C1", "name": "Basic Spirit Pill", "recipe": "2x Mortal Ginseng (#I3)", "req": "Alchemy Level 1", "desc": "A basic pill.", "type": "Material", "symbol": "Pill" }
+  ],
+  "skills": { "active": [], "passive": [] },
+  "missions": {
+    "main": { "MS1": { "title": "Trial", "desc": "Travel north.", "req": "None", "reward": "Inner Robes (B)", "time": "7 Days", "tag": "MS" } },
+    "side": {}
+  },
+  "chunks": {
+    "1": { "cx": 1, "cy": 1, "type": "G1" },
+    "2": { "cx": 1, "cy": 2, "type": "F1" }
+  },
+  "regions": [
+    { "name": "Qingyun Fields", "type": "Forest", "impedance": 2, "ranges": [{"cid": 1, "lx1": 1, "ly1": 1, "lx2": 10, "ly2": 10}], "exceptions": [], "color": "#4ade80" }
+  ],
+  "entities": {
+    "herbData": { "1,2,3": { "age": 5, "name": "Mortal Ginseng", "element": "Wood", "rank": "Mortal", "lore": "A young root.", "growth": 60, "obtainable": "Mortal Ginseng", "color": "#99f6e4", "hidden": false } },
+    "treeData": {},
+    "npcs": { "1,4,4": { "name": "Mortal Rabbit", "type": "R", "race": "Beast", "realm": "Mortal", "desc": "A swift creature.", "obtainable": "Rabbit Meat", "color": "#ffffff" } },
+    "qiTileData": { "1,2,3": { "density": 5, "element": "wood", "hidden": false } },
+    "mineralData": {}, "guData": {}, "springData": {}, "soilData": {},
+    "forestData": {
+      "1,2,1": {
+        "name": "Emerald Bamboo Grove",
+        "beasts": "Bear (B) : Qi Condensation (Layer 2), Hare (H) : Mortal",
+        "herbs": "Ginseng : 50 Years (Wood), Morning Dao-Dew : 1 Year (Water)",
+        "qi": 3,
+        "hidden": false
+      }
+    }
+  }
+}
+
+New Feature (Sprite Coloring):
+You can assign a "color" property to any entity (NPC, Herb, Tree) to tint it.
+Hidden mechanics: Set "hidden": true for herbs, trees, or qiTiles to make them invisible until the player uses divine sense.
+
+Terrain Types mapping:
+G1-G4 (Grass), DT1-DT4 (Dusty/Mountains), F1-F4 (Frost), S1-S4 (Sand), MT1-MT4 (Magma).
+
+CRITICAL RULE UPDATE: NEVER use JavaScript for loops, algorithmic generation, or dynamic scripting to create the world data inside index.html. The game world MUST be created using STRICTLY hardcoded JSON format ONLY. The AI is forbidden from writing generation code and must output the exact, pure JSON structure to define chunks, regions, and entities.
+
+
+
+[2] THE 2X2 CITY CHUNK SYSTEM
+- Standard world chunks represent a 10x10 mapping grid.
+- Cities are massive 2x2 modular structures consisting of FOUR integrated chunks forming a geometric square.
+- If the AI chooses to generate a City element, it MUST initialize 4 adjacent chunks concurrently (e.g., matching coordinates in a balanced grid block like (cx:3, cy:3), (cx:4, cy:3), (cx:3, cy:4), (cx:4, cy:4)) using the type "CityT1".
+
+[3] PROCEDURAL WALL, WATCHTOWER, AND GATE ARCHITECTURE
+- Walls are processed as linear edge segments across chunk zones using hollow array bounding scopes:
+  "wallStructures": [ { "range": "ChunkId,StartX,StartY - ChunkId,EndX,EndY", "condition": "Sturdy", "quality": "Obsidian Granite", "hp": "10000/10000", "direction": "N" } ]
+- Walls only generate tiles strictly along the outermost edges of the defined bounding coordinates.
+- NEW RULE: City walls and gates must leave exactly THREE layers of tiles free from all outer directions of the 2x2 city block. For example, if a city spans (gx:30-49, gy:30-49), the wall must only occupy the rectangle from (gx:33, gy:33) to (gx:46, gy:46). This ensures free perimeter space.
+- Individual elements along procedural boundaries can be customized or updated via specific data keys:
+
+...
+
+[5] NPC PERSONALITY & TRAITS
+- NPCs can have one or more personality tags that define their behavior and character.
+- Personality Tag Format:
+  "personality": [
+    { "tag": "Vengeful", "color": "#ef4444", "influence": 8 },
+    { "tag": "Disciplined", "color": "#3b82f6", "influence": 5 }
+  ]
+- Influence (1-10): Determines the intensity of the tag's color in the UI. 1 is light, 10 is deep.
+- Imperial Guards: Use "type": "IG". They stand near gates, guarding both inside and outside positions.
+
+  "specificWalls": { "ChunkId,X,Y": { "condition": "Weathered", "quality": "Iron Core Wood", "hp": "4500/5000", "direction": "E" } }
+- Corners of city layouts automatically contain defensive towers, tracking spatial attributes:
+  "towerStructures": { "ChunkId,X,Y": { "condition": "Intact", "quality": "Reinforced Brick", "hp": "8000/8000", "direction": "W" } }
+- A City has exactly one main Gate structure that takes up TWO structural tiles of horizontal space:
+  "gateStructures": { "ChunkId,X,Y": { "state": "Closed", "condition": "Reinforced Brass Gate", "quality": "Spirit-Forged Steel", "hp": "25000/25000", "direction": "S" } }
+- Watchtowers must be placed on the wall tiles immediately adjacent to the left and right sides of a Gate.
+
+[4] MANDATORY GLOBAL DIRECTIONAL DATA
+- All location references, entities, structures, and player status vectors MUST contain direction parameters specifying their heading: North (N), South (S), East (E), or West (W).
+- The player vector must follow this expanded orientation format:
+  "player": { "chunkId": 1, "lx": 5, "ly": 5, "direction": "N" }
+
+[6] RELATIONS & KARMA SYSTEM
+- The world state now tracks the player's relationships and network of karma.
+- To define relationships, the AI must add a "relations" array in the root of the worldData JSON structure.
+- Relations Array Format:
+  "relations": [
+    {
+      "type": "friends" | "family" | "disciples" | "enemy" | "subordinates" | "lover",
+      "Name": "NPC Name",
+      "Gender": "M" | "F",
+      "Relation": "Short description of the relation",
+      "Number": 1
+    }
+  ]
+- "type": Specifies the category of relationship (friends, family, disciples, enemy, subordinates, lover). Only a single type is supported per relation.
+- "Gender": Determines the visual profile used. "M" displays a male profile avatar ("MaleNPCProf.png"), and "F" displays a female profile avatar ("FemaleNPCProf.png").
+- "Relation": A short summary of how the NPC relates to the player (e.g., "Adoptive Father & Master").
+- "Number" (1-inf): Specifies the display order of the relation inside its respective category section (1 displays first, 2 displays second, etc.).
+- The player's name is dynamically loaded from the "name" property of the "player" object (e.g., "player": { "chunkId": 1, "lx": 5, "ly": 5, "direction": "N", "name": "Wandering Cultivator" }).
+
+[7] FOREST CARD & DEPTH TILES
+- A Forest card tile represents a dense woodland area taking up 2 vertical grid spaces.
+- To define a Forest card, place an entry in `worldData.entities.forestData` using the key "ChunkId,BaseX,BaseY":
+  "forestData": {
+    "1,2,1": {
+      "name": "Emerald Bamboo Grove",
+      "beasts": "Bear (B) : Qi Condensation (Layer 2), Hare (H) : Mortal",
+      "herbs": "Ginseng : 50 Years (Wood), Morning Dao-Dew : 1 Year (Water)",
+      "qi": 3
+    }
+  }
+- Coordinate & Depth Rule: The base tile "ChunkId,BaseX,BaseY" and the back tile "ChunkId,BaseX-1,BaseY" (e.g. 1,2,1 and 1,1,1) are both occupied by the Forest card and display a combined depth and shadow effect on the map.
+- Visual Limits: The Forest.png sprite occupies exactly these 2 tiles, rendered in a 2D style directly above the tiles with little depth, and must fit tightly within the two-tile boundaries without overflowing.
+- Step-On Trigger Rule: The detailed Forest Information Box and "ENTER FOREST" button MUST ONLY appear when the player is ACTUALLY standing on one of these two tiles. Clicking or hovering from a distance must NOT trigger or show this option/box.
+- Beasts & Loot Relocation: Evolving beasts (such as the Evolving Spirit Bear) and spiritual herbs/loot must NOT be placed in the starting fields (Chunk 1) near the player. Instead, they must reside inside the Forest Chunk (Chunk 21). When the player goes near the Forest card and enters it, the old chunks are hidden and Chunk 21 is loaded so they encounter the beast and herbs inside the forest depth.
+
+[8] HIDDEN CHUNKS & MAPS BRACKETS
+- Chunks and map details can be dynamically hidden inside the map by encapsulating their keys/blocks within {{<H> and </H>}} brackets:
+  "{{<H>2": { "cx": 2, "cy": 1, "type": "DT1" },
+  "3</H>}}": { "cx": 1, "cy": 2, "type": "F1" }
+- Any chunk or entities within hidden boundaries will be hidden on the canvas map representation until explicitly visited or unmasked.
+- Overwriting Mechanics: When chunks are marked as hidden (e.g. inside a forest), if the AI generates or writes a new active (non-hidden) chunk at the exact same cx, cy coordinates (e.g. 1,1), the new active chunk will temporarily overwrite/override the hidden one. Both chunks are written and preserved in the JSON structure, but only the active one is rendered and traversable. This allows seamless generation of temporary local maps (like forest depths) without losing the underlying global map chunks.
+
+[9] BEAST EVOLUTION STAGES
+- Beasts can evolve through 5 distinct growth levels using the "stage" property (integer 1-5) inside the npc definition:
+  "npcs": {
+    "1,5,6": {
+      "type": "B",
+      "name": "Evolving Spirit Bear",
+      "realm": "Qi Condensation (Layer 2)",
+      "stage": 3,
+      "personality": [{ "tag": "Aggressive", "color": "#ef4444", "influence": 8 }],
+      "description": "A dark spirit bear showing signs of evolution.",
+      "color": "#ff8888"
+    }
+  }
+- Available beasts with 1-5 Evo stages:
+  - Ape (AP -> ApeEvo1-5.png)
+  - Bear (B -> BearEvo1-5.png)
+  - Boar (BO -> BoarEvo1-5.png)
+  - Bull (BU -> BullEvo1-5.png)
+  - Carp (C -> CarpEvo1-5.png)
+  - SwamFang (SF -> SwamFangEvo1-5.png)
+  - Raven (RA -> RavenEvo1-5.png)
+  - Deer (D -> DeerEvo1-5.png)
+  - Floodwyrm (FW -> FloodwyrmEvo1-5.png)
+  - Fox (FO -> FoxEvo1-5.png)
+  - Sheep (SHE -> SheepEvo1-5.png)
+  - Hare (H -> HareEvo1-5.png)
+  - Mammoth (MA -> MammothEvo1-5.png)
+  - Dragon (DR -> DragonEvo1-5.png)
+  - Crocodile (CR -> CocodileEvo1-5.png)
+  - FloodDragon (FD -> FloodDragonEvo1-5.png)
+  - Hyena (HY -> HyenaEvo1-5.png)
+  - Leopard (LE -> LeopardEvo1-5.png)
+  - Horse (HO -> HorseEvo1-5.png)
+- Deprecation Rule: All old versions of these beasts without "Evo" in their image names are deprecated and must not be used. Gu insects and common creatures (e.g. Mortal Rabbit 'R') are NOT subject to this deprecation and are kept as-is.
+
+[10] NEW FOREST TERRAINS & SPRITES
+- ForestT1 and ForestT2 in the imh/ folder are the designated terrain types to be used when generating chunks for the player entering a forest region.
+- Available tree/vegetation sprites include: Tree1.png through Tree7.png, Bamboo.png (and Bamboo1.png), TreeWhite1.png, Treepink1.png, and Treepink2.png. Use these to create rich, varied forest environments.
