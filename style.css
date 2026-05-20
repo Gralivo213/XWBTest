@@ -566,7 +566,7 @@
 
 .iso-msg-container {
     position: fixed;
-    top: 20px;
+    top: 80px;
     right: 20px;
     z-index: 10000;
     display: flex;
@@ -1978,4 +1978,182 @@
     font-size: 15px;
     color: #d1d5db;
     line-height: 1.4;
+}
+
+/* ========================================== */
+/* UI SCALING & SETTINGS DROPDOWN             */
+/* ========================================== */
+
+.iso-settings-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10005;
+    pointer-events: auto;
+}
+
+#iso-settings-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--gold-primary);
+    color: var(--gold-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(251, 191, 36, 0.1);
+    transition: all .3s ease;
+}
+
+#iso-settings-btn:hover {
+    transform: scale(1.05);
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 15px var(--gold-glow);
+}
+
+#iso-settings-btn.active {
+    background: var(--gold-primary);
+    color: #000;
+    box-shadow: 0 0 20px var(--gold-glow);
+}
+
+#iso-settings-btn .material-symbols-outlined {
+    font-size: 24px;
+    transition: transform 0.6s ease;
+}
+
+#iso-settings-btn.active .material-symbols-outlined {
+    transform: rotate(90deg);
+}
+
+.iso-settings-menu {
+    position: absolute;
+    top: 58px;
+    right: 0;
+    width: 150px;
+    background: radial-gradient(circle at top left, #1c1c1f, #0d0d0f);
+    border: 1px solid var(--gold-primary);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(251, 191, 36, 0.15);
+    padding: 8px 0;
+    display: none;
+    flex-direction: column;
+    z-index: 10006;
+    animation: settingsFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.iso-settings-menu.visible {
+    display: flex;
+}
+
+.iso-settings-header {
+    font-family: var(--font-title);
+    font-size: 11px;
+    color: #8a7a5f;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.15);
+    margin-bottom: 5px;
+}
+
+.iso-settings-option {
+    font-family: var(--font-data);
+    font-size: 13px;
+    color: #cbd5e1;
+    padding: 10px 15px;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 1.5px;
+    transition: all 0.2s ease;
+}
+
+.iso-settings-option:hover {
+    background: rgba(251, 191, 36, 0.1);
+    color: var(--gold-primary);
+}
+
+.iso-settings-option.active {
+    background: rgba(251, 191, 36, 0.25);
+    color: var(--gold-primary);
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--gold-glow);
+}
+
+@keyframes settingsFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Scale Overrides --- */
+
+/* Normal Mode */
+body.ui-normal .hud-root {
+    transform: scale(1) !important;
+}
+body.ui-normal .iso-clock-panel {
+    transform: scale(1) !important;
+    top: 195px !important;
+    transform-origin: top left;
+}
+
+/* Small Mode */
+body.ui-small .hud-root {
+    transform: scale(0.8) !important;
+}
+body.ui-small .iso-clock-panel {
+    transform: scale(0.8) !important;
+    top: 155px !important;
+    transform-origin: top left;
+}
+
+/* Mobile Mode */
+body.ui-mobile .hud-root {
+    transform: scale(0.6) !important;
+}
+body.ui-mobile .iso-clock-panel {
+    transform: scale(0.6) !important;
+    top: 125px !important;
+    transform-origin: top left;
+}
+body.ui-mobile .iso-settings-container {
+    top: 15px !important;
+    right: 15px !important;
+    transform: scale(0.85) !important;
+    transform-origin: top right;
+}
+body.ui-mobile .iso-msg-container {
+    top: 65px !important;
+    transform: scale(0.8) !important;
+    transform-origin: top right;
+}
+body.ui-mobile .iso-herb-panel {
+    transform: translateY(-50%) scale(0.75) !important;
+    transform-origin: right center;
+}
+body.ui-mobile .iso-herb-panel.visible {
+    transform: translateY(-50%) translateX(0) scale(0.75) !important;
+}
+body.ui-mobile .iso-stat-popup {
+    transform: translate(-50%, -50%) scale(0.75) !important;
+}
+body.ui-mobile .iso-stat-popup.visible {
+    transform: translate(-50%, -50%) scale(0.75) !important;
+}
+body.ui-mobile .iso-mission-panel {
+    transform: translate(-50%, -50%) scale(0.65) !important;
+}
+body.ui-mobile .iso-mission-panel.visible {
+    transform: translate(-50%, -50%) scale(0.65) !important;
+}
+body.ui-mobile .iso-float-btn:not(#iso-settings-btn) {
+    transform: scale(0.8) !important;
+}
+body.ui-mobile .iso-float-btn:not(#iso-settings-btn):hover {
+    transform: scale(0.85) !important;
 }

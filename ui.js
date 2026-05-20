@@ -200,6 +200,17 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
     ${[['sc', 'Scale', 0.1, 3, 0.05, 1, '1.0'], ['ox', 'Off X', -100, 100, 1, 0, '0'], ['oy', 'Off Y', -100, 100, 1, 0, '0'], ['rt', 'Rot', -180, 180, 1, 0, '0']].map(([i, l, m, M, s, v, t]) => `<div class="rot-row">${l}: <input type="range" id="rot-${i}" min="${m}" max="${M}" step="${s}" value="${v}"><span id="val-${i}">${t}</span></div>`).join('')}
     <div class="rot-row">Flip: <input type="checkbox" id="rot-fl"></div>
     <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.5); border-radius:4px; font-family:monospace; font-size:10px; color:#10b981; word-break:break-all;" id="rotator-output"></div>
+</div>
+<div class="iso-settings-container">
+    <div class="iso-float-btn" id="iso-settings-btn" title="UI Settings">
+        <span class="material-symbols-outlined">settings</span>
+    </div>
+    <div class="iso-settings-menu" id="iso-settings-menu">
+        <div class="iso-settings-header">UI SCALE</div>
+        <div class="iso-settings-option" data-scale="normal">NORMAL</div>
+        <div class="iso-settings-option" data-scale="small">SMALL</div>
+        <div class="iso-settings-option" data-scale="mobile">MOBILE</div>
+    </div>
 </div>`);
 
             // Unified close binder
@@ -381,6 +392,45 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
                 this.setMoving();
             }, { passive: false });
             this.canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Apply scale mode on page load (defaults to 'small')
+            const savedScale = localStorage.getItem('iso_ui_scale') || 'small';
+            document.body.classList.add(`ui-${savedScale}`);
+
+            // Settings menu toggling and scaling logic
+            const settingsBtn = $('iso-settings-btn');
+            const settingsMenu = $('iso-settings-menu');
+            if (settingsBtn && settingsMenu) {
+                const options = settingsMenu.querySelectorAll('.iso-settings-option');
+                options.forEach(opt => {
+                    if (opt.getAttribute('data-scale') === savedScale) {
+                        opt.classList.add('active');
+                    }
+                });
+
+                settingsBtn.onclick = stopPropagation(() => {
+                    settingsMenu.classList.toggle('visible');
+                    settingsBtn.classList.toggle('active', settingsMenu.classList.contains('visible'));
+                });
+
+                document.addEventListener('click', () => {
+                    settingsMenu.classList.remove('visible');
+                    settingsBtn.classList.remove('active');
+                });
+
+                options.forEach(opt => {
+                    opt.onclick = stopPropagation(() => {
+                        const scale = opt.getAttribute('data-scale');
+                        options.forEach(o => o.classList.remove('active'));
+                        opt.classList.add('active');
+                        document.body.classList.remove('ui-normal', 'ui-small', 'ui-mobile');
+                        document.body.classList.add(`ui-${scale}`);
+                        localStorage.setItem('iso_ui_scale', scale);
+                        settingsMenu.classList.remove('visible');
+                        settingsBtn.classList.remove('active');
+                    });
+                });
+            }
         },
 
         resize() { if (this.canvas) { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; } },
@@ -563,7 +613,8 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
                     if (type === 'B' || type === 'npcs') {
                         Object.entries(this.npcs).forEach(([nk, nd]) => {
                             if (nd.hidden) return;
-                            let matchesKey = nk.split('|').map(s => s.trim()).some(part => part === k);
+                            const pathStr = nd.tilePath || nk;
+                            let matchesKey = pathStr.split('|').map(s => s.trim()).some(part => part === k);
                             if (matchesKey) {
                                 entities.push({ type: nd.type || 'B', data: nd });
                             }

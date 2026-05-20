@@ -156,9 +156,21 @@
                 }
             });
 
+            let hasActiveChunkAnims = false;
+            if (this.animatingChunks) {
+                for (const startTime of Object.values(this.animatingChunks)) {
+                    if (ts - startTime < 2300) {
+                        hasActiveChunkAnims = true;
+                        break;
+                    }
+                }
+            }
+            const startDelay = hasActiveChunkAnims ? 2300 : 300;
+
             Object.entries(this.npcs).forEach(([k, d]) => {
                 if (d.hidden) return;
-                let parts = k.split('|').map(s => s.trim());
+                const pathStr = d.tilePath || k;
+                let parts = pathStr.split('|').map(s => s.trim());
                 let cid, gx, gy;
                 if (parts.length > 1) {
                     const [cid1, lx1, ly1] = parts[0].split(',').map(Number);
@@ -168,7 +180,7 @@
                     const gx1 = (cfg1?.cx || 0) * 10 + (lx1 || 1) - 1, gy1 = (cfg1?.cy || 0) * 10 + (ly1 || 1) - 1;
                     const gx2 = (cfg2?.cx || 0) * 10 + (lx2 || 1) - 1, gy2 = (cfg2?.cy || 0) * 10 + (ly2 || 1) - 1;
                     
-                    let progress = Math.min(1, (ts - (this.mapLoadTime || 0)) / 1000);
+                    let progress = Math.min(1, Math.max(0, (ts - (this.mapLoadTime || 0) - startDelay) / 1000));
                     gx = global.lerp(gx1, gx2, progress);
                     gy = global.lerp(gy1, gy2, progress);
                     cid = progress < 0.5 ? cid1 : cid2;
@@ -201,7 +213,7 @@
                     const gx2 = (cfg2?.cx || 0) * 10 + (lx2 - 1);
                     const gy2 = (cfg2?.cy || 0) * 10 + (ly2 - 1);
                     
-                    let progress = Math.min(1, (ts - (this.mapLoadTime || 0)) / 1000);
+                    let progress = Math.min(1, Math.max(0, (ts - (this.mapLoadTime || 0) - startDelay) / 1000));
                     gx = global.lerp(gx1, gx2, progress);
                     gy = global.lerp(gy1, gy2, progress);
                     cid = progress < 0.5 ? cid1 : cid2;
