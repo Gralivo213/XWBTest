@@ -61,10 +61,10 @@
                 this.ctx.fillStyle = bg; this.ctx.fillRect(0, 0, cw, ch);
                 if (!this.clouds) {
                     this.clouds = Array.from({ length: 8 }, () => ({ i: Math.floor(Math.random() * 6) + 1, x: Math.random() * cw, y: Math.random() * ch * 0.4, s: 0.01 + Math.random() * 0.02, sc: 0.5 + Math.random() * 1.5, a: 0.3 + Math.random() * 0.3 }));
-                    this.clouds.forEach(cl => global.AssetManager.load(`imh/C${cl.i}.png`));
+                    this.clouds.forEach(cl => global.AssetManager.load(`${CONFIG.IMG_BASE}C${cl.i}.png`));
                 }
                 this.clouds.forEach(cl => {
-                    const img = global.AssetManager.get(`imh/C${cl.i}.png`);
+                    const img = global.AssetManager.get(`${CONFIG.IMG_BASE}C${cl.i}.png`);
                     if (img?.width) {
                         const cx = (cl.x + ts * cl.s) % (cw + 600) - 300;
                         this.ctx.globalAlpha = cl.a; this.ctx.drawImage(img, cx, cl.y, img.width * cl.sc, img.height * cl.sc);

@@ -278,7 +278,7 @@
                         this.chunkConfigs[id] = { ...this.chunkConfigs[id], cx: cfg.cx, cy: cfg.cy, type: cfg.type, hidden: cfg.hidden || false };
                         if (['G1', 'G2', 'G3', 'G4', 'DT1', 'DT2', 'DT3', 'DT4', 'F1', 'F2', 'F3', 'F4', 'S1', 'S2', 'S3', 'S4', 'MT1', 'MT2', 'MT3', 'MT4', 'CityT1', 'ForestT1', 'ForestT2'].includes(cfg.type)) {
                             const prefix = getChunkPrefix(cfg.type);
-                            global.AssetManager.load(`imh/${prefix}${cfg.type.charAt(cfg.type.length - 1)}.png`);
+                            global.AssetManager.load(`${global.CONFIG.IMG_BASE}${prefix}${cfg.type.charAt(cfg.type.length - 1)}.png`);
                         }
                         if (id > prevMaxChunk) this.animatingChunks[id] = performance.now();
                         if (fid === null) fid = id;
@@ -368,8 +368,8 @@
                 });
 
                 const entitiesConfig = [
-                    [this.guData, 'G', v => `imh/${v.type}.png`],
-                    [this.mineralData, 'MI', () => `imh/MI${Math.floor(Math.random() * 9) + 1}.png`],
+                    [this.guData, 'G', v => `${global.CONFIG.IMG_BASE}${v.type}.png`],
+                    [this.mineralData, 'MI', () => `${global.CONFIG.IMG_BASE}MI${Math.floor(Math.random() * 9) + 1}.png`],
                     [this.springData, 'W', null],
                     [this.soilData, 'S', null]
                 ];
@@ -392,7 +392,7 @@
                         const [c, x, y] = k.split(',').map(Number);
                         const tFront = this.getTile(c, x, y);
                         if (tFront) {
-                            tFront.assetUrl = 'imh/Forest.png';
+                            tFront.assetUrl = global.CONFIG.IMG_BASE + 'Forest.png';
                             tFront.assetType = 'Forest';
                             tFront.assetHidden = v.hidden || false;
                             tFront.assetColor = v.color || null;
@@ -463,7 +463,7 @@
             let img = null, iw = 0, ih = 0;
             if (hbg) {
                 const prefix = cfg.type.startsWith('City') ? 'CityT' : (cfg.type.startsWith('DT') ? 'DustyT' : (cfg.type.startsWith('MT') ? 'MagmaT' : (cfg.type.startsWith('F') ? 'FrostT' : (cfg.type.startsWith('S') ? 'SandT' : (cfg.type.startsWith('ForestT') ? 'ForestT' : 'GrassT')))));
-                const imgUrl = `imh/${prefix}${cfg.type.charAt(cfg.type.length - 1)}.png`;
+                const imgUrl = `${global.CONFIG.IMG_BASE}${prefix}${cfg.type.charAt(cfg.type.length - 1)}.png`;
                 img = global.AssetManager.get(imgUrl, false);
                 iw = img?.width || img?.naturalWidth; ih = img?.height || img?.naturalHeight;
                 if (!img) {

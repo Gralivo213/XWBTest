@@ -1,6 +1,7 @@
 (function (global) {
-    const B = 'imh/';
+    const B = 'https://raw.githubusercontent.com/Gralivo213/XWBTest/master/imh/';
     const CONFIG = {
+        IMG_BASE: B,
         TILE_WIDTH: 64, TILE_HEIGHT: 32, TILE_THICKNESS: 12, CHUNK_SIZE: 10,
         COLORS: {
             TOP_LIGHT: '#fce6b8', TOP_DARK: '#dcb365', SIDE_LEFT_LIGHT: '#c4a45e', SIDE_LEFT_DARK: '#8a723e', SIDE_RIGHT_LIGHT: '#a88c4d', SIDE_RIGHT_DARK: '#61502b', BORDER: 'rgba(0,0,0,0.4)',
