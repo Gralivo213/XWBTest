@@ -185,10 +185,10 @@
                     data = JSON.parse(cleanStr);
                 }
 
-                this.parseHiddenMarkers(data);
+this.parseHiddenMarkers(data);
+            this.mapLoadTime = performance.now();
 
-                this.inventory = Array(24).fill(null);
-                this.missions = { main: {}, side: {} };
+            this.inventory = Array(24).fill(null);                this.missions = { main: {}, side: {} };
                 this.craftRecipes = [];
                 this.skills = { active: [], passive: [] };
                 this.wallStructures = data.wallStructures || [];

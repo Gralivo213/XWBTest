@@ -560,7 +560,15 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
                 entities = this.currentTileEntities;
             } else {
                 this.entityDataSources.forEach(([type, store]) => {
-                    if (store[k]) entities.push({ type: type === 'B' ? (store[k].type || 'B') : type, data: store[k] });
+                    if (type === 'B') {
+                        Object.entries(this.npcs).forEach(([nk, nd]) => {
+                            if (nk.split('|').map(s => s.trim()).includes(k)) {
+                                entities.push({ type: nd.type || 'B', data: nd });
+                            }
+                        });
+                    } else {
+                        if (store[k]) entities.push({ type: type, data: store[k] });
+                    }
                 });
                 if (this.gateStructures[k]) entities.push({ type: 'GATE', data: this.gateStructures[k] });
                 else if (this.towerStructures[k]) entities.push({ type: 'TOWER', data: this.towerStructures[k] });
