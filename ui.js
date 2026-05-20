@@ -560,19 +560,21 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
                 entities = this.currentTileEntities;
             } else {
                 this.entityDataSources.forEach(([type, store]) => {
-                    if (type === 'B') {
+                    if (type === 'B' || type === 'npcs') {
                         Object.entries(this.npcs).forEach(([nk, nd]) => {
-                            if (nk.split('|').map(s => s.trim()).includes(k)) {
+                            if (nd.hidden) return;
+                            let matchesKey = nk.split('|').map(s => s.trim()).some(part => part === k);
+                            if (matchesKey) {
                                 entities.push({ type: nd.type || 'B', data: nd });
                             }
                         });
                     } else {
-                        if (store[k]) entities.push({ type: type, data: store[k] });
+                        if (store[k] && !store[k].hidden) entities.push({ type: type, data: store[k] });
                     }
                 });
-                if (this.gateStructures[k]) entities.push({ type: 'GATE', data: this.gateStructures[k] });
-                else if (this.towerStructures[k]) entities.push({ type: 'TOWER', data: this.towerStructures[k] });
-                else if (this.specificWalls[k]) entities.push({ type: 'WALL', data: this.specificWalls[k] });
+                if (this.gateStructures[k] && !this.gateStructures[k].hidden) entities.push({ type: 'GATE', data: this.gateStructures[k] });
+                else if (this.towerStructures[k] && !this.towerStructures[k].hidden) entities.push({ type: 'TOWER', data: this.towerStructures[k] });
+                else if (this.specificWalls[k] && !this.specificWalls[k].hidden) entities.push({ type: 'WALL', data: this.specificWalls[k] });
             }
 
             if (k === this.lastUIKey && this.actionActive === this.lastActionState && this.currentTileEntities.length === entities.length && this.currentEntityIndex === this.lastEntityIndex) return;
@@ -944,9 +946,12 @@ ${makeSystemPopup('astral', 'Astral Alignment', '#38bdf8', 'rgba(56,189,248,0.2)
             const container = $('unified-mission-list');
             if (!container) return;
 
+            const mainMissions = this.missions?.main ? Object.entries(this.missions.main) : [];
+            const sideMissions = this.missions?.side ? Object.entries(this.missions.side) : [];
+
             const allMissions = [
-                ...Object.entries(this.missions.main).map(([id, m]) => ({ ...m, id, sort: 1 })),
-                ...Object.entries(this.missions.side).map(([id, m]) => ({ ...m, id, sort: 2 }))
+                ...mainMissions.map(([id, m]) => ({ ...m, id, sort: 1 })),
+                ...sideMissions.map(([id, m]) => ({ ...m, id, sort: 2 }))
             ].sort((a, b) => a.sort - b.sort);
 
             container.innerHTML = allMissions.map(m => {

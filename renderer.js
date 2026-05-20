@@ -157,9 +157,39 @@
             });
 
             Object.entries(this.npcs).forEach(([k, d]) => {
+                if (d.hidden) return;
                 let parts = k.split('|').map(s => s.trim());
                 let cid, gx, gy;
                 if (parts.length > 1) {
+                    const [cid1, lx1, ly1] = parts[0].split(',').map(Number);
+                    const [cid2, lx2, ly2] = parts[1].split(',').map(Number);
+                    const cfg1 = this.chunkConfigs[cid1];
+                    const cfg2 = this.chunkConfigs[cid2];
+                    const gx1 = (cfg1?.cx || 0) * 10 + (lx1 || 1) - 1, gy1 = (cfg1?.cy || 0) * 10 + (ly1 || 1) - 1;
+                    const gx2 = (cfg2?.cx || 0) * 10 + (lx2 || 1) - 1, gy2 = (cfg2?.cy || 0) * 10 + (ly2 || 1) - 1;
+                    
+                    let progress = Math.min(1, (ts - (this.mapLoadTime || 0)) / 1000);
+                    gx = global.lerp(gx1, gx2, progress);
+                    gy = global.lerp(gy1, gy2, progress);
+                    cid = progress < 0.5 ? cid1 : cid2;
+                } else {
+                    const coords = parts[0].split(',').map(Number);
+                    if (coords.length < 3) return;
+                    const [cidVal, lx, ly] = coords;
+                    const cfg = this.chunkConfigs[cidVal];
+                    gx = (cfg?.cx || 0) * 10 + lx - 1;
+                    gy = (cfg?.cy || 0) * 10 + ly - 1;
+                    cid = cidVal;
+                }
+                if (visibleChunks.has(cid) && isVis(gx, gy)) {
+                    q.push({ type: 'npc', obj: d, gx, gy, chunkId: cid, z: gx + gy + 0.1 });
+                }
+            });
+
+            if (this.player?.lx || this.player?.tilePath) {
+                let gx, gy, cid;
+                if (this.player.tilePath && this.player.tilePath.includes('|')) {
+                    let parts = this.player.tilePath.split('|').map(s => s.trim());
                     const [cid1, lx1, ly1] = parts[0].split(',').map(Number);
                     const [cid2, lx2, ly2] = parts[1].split(',').map(Number);
                     const cfg1 = this.chunkConfigs[cid1];
@@ -172,21 +202,15 @@
                     gy = global.lerp(gy1, gy2, progress);
                     cid = progress < 0.5 ? cid1 : cid2;
                 } else {
-                    const [cidVal, lx, ly] = parts[0].split(',').map(Number);
+                    const cidVal = this.player.chunkId;
                     const cfg = this.chunkConfigs[cidVal];
-                    gx = (cfg?.cx || 0) * 10 + lx - 1;
-                    gy = (cfg?.cy || 0) * 10 + ly - 1;
+                    gx = (cfg?.cx || 0) * 10 + this.player.lx - 1;
+                    gy = (cfg?.cy || 0) * 10 + this.player.ly - 1;
                     cid = cidVal;
                 }
-                if (visibleChunks.has(cid) && isVis(gx, gy)) {
-                    q.push({ type: 'npc', obj: d, gx, gy, chunkId: cid, z: gx + gy + 0.1 });
-                }
-            });
 
-            if (this.player?.lx) {
-                const cfg = this.chunkConfigs[this.player.chunkId], gx = (cfg?.cx || 0) * 10 + this.player.lx - 1, gy = (cfg?.cy || 0) * 10 + this.player.ly - 1;
-                if (visibleChunks.has(this.player.chunkId) && isVis(gx, gy)) {
-                    q.push({ type: 'player', gx, gy, chunkId: this.player.chunkId, z: gx + gy + 0.1 });
+                if (visibleChunks.has(cid) && isVis(gx, gy)) {
+                    q.push({ type: 'player', gx, gy, chunkId: cid, z: gx + gy + 0.1 });
                 }
             }
 

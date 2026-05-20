@@ -136,7 +136,7 @@
 
     <Examples>
 
-      <Right>"player": { "chunkId": 1, "lx": 5, "ly": 5, "direction": "N", "name": "Wandering Cultivator" }</Right>
+      <Right>"player": { "tilePath": "1,5,5 | 1,6,5", "direction": "E", "name": "Wandering Cultivator" }</Right>
 
       <Wrong>"player": { "chunkId": 1, "lx": 5, "ly": 5 }</Wrong>
 
@@ -301,14 +301,21 @@
 
 
 
-  <MobMovementInterpolation>
+<MobMovementInterpolation>
 
-    <Rule>To track and animate a moving Mob (Player, NPC, Beast, or Guard), use the dual-coordinate key layout syntax format: "X1st | X2nd".</Rule>
+    <Rule>To track and animate a moving Mob (Player, NPC, Beast, or Guard), use the dual-coordinate layout syntax format: "X1st | X2nd".</Rule>
 
     <Behavior>If a single coordinate key "X" is used, the entity remains stationary. If a double coordinate key layout "X1st | X2nd" is parsed, the game engine automatically hooks a one-time linear interpolation mapping transition to slide the entity asset smoothly across screens from the first tile position to the second target position on web reloads.</Behavior>
 
-  </MobMovementInterpolation>
+    <PlayerSyntaxMapping>
 
+      For NPCs/Beasts, the layout is written directly as the key inside data dictionaries. 
+
+      For the Player, stationary mapping uses standard parameters ("chunkId", "lx", "ly"), while active path tracking overrides those blocks with a dedicated string variable field parameter layout matching: "tilePath": "ChunkId,LocalX,LocalY | ChunkId,LocalX,LocalY".
+
+    </PlayerSyntaxMapping>
+
+  </MobMovementInterpolation>
 
 
   <NPCPersonalityAndTraits>

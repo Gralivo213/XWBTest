@@ -412,11 +412,21 @@ this.parseHiddenMarkers(data);
                 });
                 Object.entries(this.qiTileData).forEach(([k, v]) => { const [c, x, y] = k.split(',').map(Number); const t = this.getTile(c, x, y); if (t) t.qiData = v; });
 
-                if (this.player && this.player.chunkId) {
+                if (this.player) {
                     global.AssetManager.get(global.CONFIG.PLAYER_IMG);
-                    const cfg = this.chunkConfigs[this.player.chunkId];
+                    let cid = this.player.chunkId;
+                    let lx = this.player.lx;
+                    let ly = this.player.ly;
+
+                    if (this.player.tilePath && this.player.tilePath.includes('|')) {
+                        let parts = this.player.tilePath.split('|').map(s => s.trim());
+                        // Target the destination coordinates for the camera center look-at matrix
+                        [cid, lx, ly] = parts[1].split(',').map(Number);
+                    }
+
+                    const cfg = this.chunkConfigs[cid];
                     if (cfg) {
-                        const sc = this.gridToScreen((cfg.cx || 0) * 10 + this.player.lx - 1, (cfg.cy || 0) * 10 + this.player.ly - 1);
+                        const sc = this.gridToScreen((cfg.cx || 0) * 10 + lx - 1, (cfg.cy || 0) * 10 + ly - 1);
                         this.targetCamera.x = window.innerWidth / 2 - sc.x + this.camera.x;
                         this.targetCamera.y = window.innerHeight / 2 - sc.y + this.camera.y;
                     }
