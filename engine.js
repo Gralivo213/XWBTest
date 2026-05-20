@@ -264,7 +264,7 @@
                 }
 
                 let currentMax = 0;
-                let prevMaxChunk = parseInt(localStorage.getItem('iso_max_chunk')) || 0;
+                let prevMaxChunk = 0; try { prevMaxChunk = parseInt(localStorage.getItem('iso_max_chunk')) || 0; } catch(e) {}
                 if (!this.animatingChunks) this.animatingChunks = {};
                 let fid = null;
 
@@ -285,7 +285,7 @@
                     });
                 }
                 if (currentMax < prevMaxChunk) prevMaxChunk = 0;
-                localStorage.setItem('iso_max_chunk', currentMax);
+                try { localStorage.setItem('iso_max_chunk', currentMax); } catch(e) {}
 
                 if (data.entities) {
                     this.herbData = data.entities.herbData || {};
