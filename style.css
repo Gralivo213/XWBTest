@@ -2167,14 +2167,15 @@ body.ui-mobile .iso-float-btn:not(#iso-settings-btn):hover {
     left: 50%;
     transform: translateX(-50%) scale(1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 10px 20px;
+    gap: 12px;
+    padding: 12px 20px;
     background: rgba(13, 13, 15, 0.65);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(201, 168, 106, 0.25);
-    border-radius: 30px;
+    border-radius: 20px;
     box-shadow: 
         0 15px 35px rgba(0, 0, 0, 0.7),
         inset 0 0 15px rgba(201, 168, 106, 0.05);
@@ -2228,4 +2229,261 @@ body.ui-small .iso-action-bar {
 body.ui-mobile .iso-action-bar {
     transform: translateX(-50%) scale(0.7) !important;
     bottom: 12px !important;
+}
+
+/* SYSTEM SETTINGS POPUP */
+.iso-settings-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 12000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.iso-settings-popup-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.iso-settings-popup-body {
+    position: relative;
+    width: 500px;
+    max-width: 90vw;
+    max-height: 85vh;
+    background: radial-gradient(circle at top left, #1a1510, #0a0806);
+    border: 2px solid var(--gold-primary);
+    border-image: linear-gradient(to bottom, var(--gold-primary), var(--gold-dark), var(--gold-primary)) 1;
+    border-radius: 4px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(251, 191, 36, 0.1);
+    z-index: 12005;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dark) transparent;
+}
+
+.iso-settings-popup-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.iso-settings-popup-body::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 3px;
+}
+
+.iso-settings-popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: var(--gold-primary);
+    cursor: pointer;
+    font-size: 20px;
+    font-family: sans-serif;
+    transition: color 0.3s;
+}
+
+.iso-settings-popup-close-btn:hover {
+    color: #fff;
+}
+
+.iso-settings-popup-title {
+    font-family: var(--font-title);
+    color: var(--gold-primary);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+.iso-settings-section-title {
+    font-family: var(--font-title);
+    color: #f3cf7a;
+    font-size: 16px;
+    border-bottom: 1px double rgba(251, 191, 36, 0.4);
+    padding-bottom: 5px;
+    margin: 15px 0 12px 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.iso-settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.iso-settings-field label {
+    font-family: var(--font-data);
+    color: #d1d5db;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.iso-settings-input,
+.iso-settings-select {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 4px;
+    color: #fff;
+    padding: 8px 12px;
+    font-family: var(--font-data);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.iso-settings-input:focus,
+.iso-settings-select:focus {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 8px var(--gold-glow);
+}
+
+.iso-settings-range {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    outline: none;
+    margin: 10px 0;
+}
+
+.iso-settings-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gold-primary);
+    border: 1px solid var(--gold-dark);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--gold-glow);
+}
+
+.iso-scale-btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.iso-scale-btn {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 4px;
+    color: #8a7a5f;
+    padding: 8px 0;
+    cursor: pointer;
+    font-family: var(--font-data);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+}
+
+.iso-scale-btn:hover {
+    color: #fff;
+    border-color: var(--gold-primary);
+}
+
+.iso-scale-btn.active {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: var(--gold-primary);
+    color: var(--gold-primary);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.iso-settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* AI CHAT BAR IN BOTTOM HUD */
+.iso-chat-bar-container {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    box-sizing: border-box;
+    align-items: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.iso-chat-bar-container:focus-within {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.iso-chat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: var(--font-data);
+    font-size: 14px;
+    padding: 6px 0;
+    min-width: 200px;
+}
+
+.iso-chat-input::placeholder {
+    color: #8a7a5f;
+    font-style: italic;
+}
+
+.iso-chat-submit {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--gold-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.iso-chat-submit:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.iso-chat-submit .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.iso-chat-submit:disabled {
+    color: #555 !important;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.iso-action-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }

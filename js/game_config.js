@@ -35,8 +35,34 @@
         }
     });
 
-    CONFIG.getNPCAsset = function (type, stage = 1) {
-        const base = CONFIG.NPC_BASE_MAP[type];
+    CONFIG.getNPCAsset = function (type, stage = 1, name = "") {
+        let resolvedType = type;
+        if (!CONFIG.NPC_BASE_MAP[resolvedType]) {
+            const n = (name || "").toLowerCase();
+            const t = (type || "").toLowerCase();
+            if (n.includes("ape") || t.includes("ape")) resolvedType = "AP";
+            else if (n.includes("bear") || t.includes("bear")) resolvedType = "B";
+            else if (n.includes("boar") || t.includes("boar")) resolvedType = "BO";
+            else if (n.includes("bull") || t.includes("bull")) resolvedType = "BU";
+            else if (n.includes("carp") || t.includes("carp")) resolvedType = "C";
+            else if (n.includes("swam") || t.includes("swamp") || t.includes("sf")) resolvedType = "SF";
+            else if (n.includes("raven") || t.includes("raven")) resolvedType = "RA";
+            else if (n.includes("deer") || t.includes("deer")) resolvedType = "D";
+            else if (n.includes("floodwyrm") || n.includes("wyrm") || t.includes("fw")) resolvedType = "FW";
+            else if (n.includes("fox") || t.includes("fox")) resolvedType = "FO";
+            else if (n.includes("sheep") || t.includes("sheep")) resolvedType = "SHE";
+            else if (n.includes("hare") || t.includes("hare")) resolvedType = "H";
+            else if (n.includes("rabbit") || t.includes("rabbit")) resolvedType = "R";
+            else if (n.includes("mammoth") || t.includes("mammoth")) resolvedType = "MA";
+            else if (n.includes("flooddragon") || t.includes("fd")) resolvedType = "FD";
+            else if (n.includes("dragon") || t.includes("dragon")) resolvedType = "DR";
+            else if (n.includes("crocodile") || t.includes("croc") || t.includes("cr")) resolvedType = "CR";
+            else if (n.includes("hyena") || t.includes("hyena")) resolvedType = "HY";
+            else if (n.includes("leopard") || t.includes("leopard")) resolvedType = "LE";
+            else if (n.includes("horse") || t.includes("horse")) resolvedType = "HO";
+            else if (n.includes("guard") || t.includes("guard") || t.includes("ig")) resolvedType = "IG";
+        }
+        const base = CONFIG.NPC_BASE_MAP[resolvedType];
         if (!base) return B + 'R1.png';
         if (base.endsWith('Evo')) {
             const s = Math.min(5, Math.max(1, parseInt(stage) || 1));

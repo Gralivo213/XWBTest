@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IsoMapEngine - 4 Chunk World</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/game_config.js"></script>
+    <script src="js/game_asset_manager.js"></script>
+    <script src="js/engine_core.js"></script>
+    <script src="js/engine_marker_cleaner.js"></script>
+    <script src="js/engine_parser_core.js"></script>
+    <script src="js/engine_parser_structures.js"></script>
+    <script src="js/engine_parser_entities.js"></script>
+    <script src="js/engine_chunk.js"></script>
+    <script src="js/renderer_projection.js"></script>
+    <script src="js/renderer_loop_base.js"></script>
+    <script src="js/renderer_loop_chunks.js"></script>
+    <script src="js/renderer_loop_pieces.js"></script>
+    <script src="js/renderer_overlay_core.js"></script>
+    <script src="js/renderer_overlay_assets.js"></script>
+    <script src="js/renderer_overlay_regions.js"></script>
+    <script src="js/renderer_sky_background.js"></script>
+    <script src="js/renderer_sky_solar.js"></script>
+    <script src="js/ui_html_layout_core.js"></script>
+    <script src="js/ui_html_layout_panels.js"></script>
+    <script src="js/ui_html_layout_popups.js"></script>
+    <script src="js/ui_html_layout_bind_core.js"></script>
+    <script src="js/ui_html_layout_bind_actions.js"></script>
+    <script src="js/ui_hud_controllers.js"></script>
+    <script src="js/ui_sense_aura.js"></script>
+    <script src="js/ui_contextual_panel_core.js"></script>
+    <script src="js/ui_contextual_panel_forest.js"></script>
+    <script src="js/ui_contextual_panel_entity.js"></script>
+    <script src="js/ui_skills_book.js"></script>
+    <script src="js/ui_relations_graph_core.js"></script>
+    <script src="js/ui_relations_graph_nodes.js"></script>
+    <script src="js/ui_event_canvas.js"></script>
+    <script src="js/ui_event_settings_init.js"></script>
+    <script src="js/ui_event_settings_save.js"></script>
+    <script src="js/ui_inventory_menu_core.js"></script>
+    <script src="js/ui_inventory_crafting.js"></script>
+    <script src="js/ui_inventory_skills.js"></script>
+    <script src="js/ui_chat_prompt.js"></script>
+    <script src="js/ui_chat_schema_player.js"></script>
+    <script src="js/ui_chat_schema_world.js"></script>
+    <script src="js/ui_chat_schema_structures.js"></script>
+    <script src="js/ui_chat_schema_entities.js"></script>
+    <script src="js/ui_chat_schema_core.js"></script>
+    <script src="js/ui_state_converter.js"></script>
+    <script src="js/ui_chat_ai_core.js"></script>
+    <script src="js/ui_chat_ai_fetch.js"></script>
+    <script src="js/ui_chat_ai_interpret.js"></script>
+    <script src="js/ui_chat_ai_submit.js"></script>
+    <script src="js/game_boot.js"></script>
+    <script>
+        window.Game = "Start";
+
+        // Load from localStorage
+        let savedWorldState = localStorage.getItem('iso_world_state');
+
+        let updated = false;
+        const updateInterval = setInterval(() => {
+            if (typeof window.UpdateMap === 'function') {
+                if (savedWorldState) {
+                    window.UpdateMap(savedWorldState);
+                    console.log("Xianxia JSON World Loaded from State.");
+                } else {
+                    console.log("No world state found. Waiting for AI initialization...");
+                }
+                updated = true;
+                clearInterval(updateInterval);
+            }
+        }, 200);
+
+        setTimeout(() => {
+            if (!updated && typeof window.UpdateMap === 'function') {
+                if (savedWorldState) window.UpdateMap(savedWorldState);
+                clearInterval(updateInterval);
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>
